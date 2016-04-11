@@ -17,4 +17,15 @@ init =
 
 update : Action -> Model -> ( Model, Effects Action )
 update action model =
-  ( model, Effects.none )
+  case action of
+    Noop ->
+      ( model, Effects.none )
+
+    HandleQuestionAction action' ->
+      let
+        ( model', effects' ) =
+          Question.Update.update action' model.currentQuestion
+      in
+        ( { model | currentQuestion = model' }
+        , Effects.map HandleQuestionAction effects'
+        )
